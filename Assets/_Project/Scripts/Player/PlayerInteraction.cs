@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Project.Laser;
 
 namespace Project.Player
@@ -14,6 +14,11 @@ namespace Project.Player
         [SerializeField] private KeyCode rotateBackwardKey = KeyCode.Q;
         [SerializeField] private bool drawDebugRay = true;
 
+        private LaserReflector currentReflector;
+
+        public bool HasInteractableTarget => currentReflector != null;
+        public string CurrentPrompt => currentReflector == null ? string.Empty : currentReflector.GetInteractionPrompt(rotateForwardKey, rotateBackwardKey);
+
         private void Awake()
         {
             if (playerCamera == null)
@@ -26,9 +31,22 @@ namespace Project.Player
         {
             if (playerCamera == null)
             {
+                currentReflector = null;
                 return;
             }
 
+            if (PauseMenuController.IsPauseMenuOpen)
+            {
+                currentReflector = null;
+                return;
+            }
+
+            UpdateCurrentReflector();
+            HandleRotationInput();
+        }
+
+        private void UpdateCurrentReflector()
+        {
             Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
 
             if (drawDebugRay)
@@ -38,22 +56,28 @@ namespace Project.Player
 
             if (!Physics.Raycast(ray, out RaycastHit hit, interactDistance, ~0, QueryTriggerInteraction.Ignore))
             {
+                currentReflector = null;
                 return;
             }
 
-            if (!hit.collider.TryGetComponent(out LaserReflector reflector))
+            currentReflector = hit.collider.GetComponentInParent<LaserReflector>();
+        }
+
+        private void HandleRotationInput()
+        {
+            if (currentReflector == null)
             {
                 return;
             }
 
             if (Input.GetKeyDown(rotateForwardKey))
             {
-                reflector.RotateForward();
+                currentReflector.RotateForward();
             }
 
             if (Input.GetKeyDown(rotateBackwardKey))
             {
-                reflector.RotateBackward();
+                currentReflector.RotateBackward();
             }
         }
     }

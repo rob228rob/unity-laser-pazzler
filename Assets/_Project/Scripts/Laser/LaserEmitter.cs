@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Project.Laser
@@ -53,12 +53,41 @@ namespace Project.Laser
                 {
                     points.Add(hit.point);
 
-                    if (hit.collider.TryGetComponent(out LaserReceiver receiver))
+                    LaserReceiver receiver = hit.collider.GetComponentInParent<LaserReceiver>();
+                    if (receiver != null)
                     {
                         receiver.ReceiveLaserHit();
                     }
 
-                    if (hit.collider.TryGetComponent(out LaserReflector reflector) && bounceIndex < maxBounces)
+                    LaserBeamSplitter splitter = hit.collider.GetComponentInParent<LaserBeamSplitter>();
+                    if (splitter != null)
+                    {
+                        splitter.ReceiveLaserHit();
+                        DrawDebugSegments();
+                        UpdateLineRenderer();
+                        return;
+                    }
+
+                    LaserRelayEmitter relayEmitter = hit.collider.GetComponentInParent<LaserRelayEmitter>();
+                    if (relayEmitter != null && relayEmitter.gameObject != gameObject)
+                    {
+                        relayEmitter.ReceiveLaserHit();
+                        DrawDebugSegments();
+                        UpdateLineRenderer();
+                        return;
+                    }
+
+                    LaserColorFilter colorFilter = hit.collider.GetComponentInParent<LaserColorFilter>();
+                    if (colorFilter != null)
+                    {
+                        colorFilter.ReceiveLaserHit();
+                        DrawDebugSegments();
+                        UpdateLineRenderer();
+                        return;
+                    }
+
+                    LaserReflector reflector = hit.collider.GetComponentInParent<LaserReflector>();
+                    if (reflector != null && bounceIndex < maxBounces)
                     {
                         remainingDistance -= hit.distance;
                         currentDirection = reflector.GetReflectedDirection(currentDirection, hit);

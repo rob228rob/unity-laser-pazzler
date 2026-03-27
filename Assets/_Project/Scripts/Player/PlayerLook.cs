@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Project.Player
 {
@@ -15,6 +15,14 @@ namespace Project.Player
 
         private float pitch;
 
+        private void Awake()
+        {
+            if (playerBody == null && transform.parent != null)
+            {
+                playerBody = transform.parent;
+            }
+        }
+
         private void Start()
         {
             if (lockCursorOnStart)
@@ -25,19 +33,19 @@ namespace Project.Player
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (playerBody == null)
             {
-                LockCursor(false);
+                return;
             }
 
-            if (!Cursor.lockState.Equals(CursorLockMode.Locked) && Input.GetMouseButtonDown(0))
+            if (PauseMenuController.IsPauseMenuOpen)
             {
-                LockCursor(true);
+                return;
             }
 
             if (Cursor.lockState != CursorLockMode.Locked)
             {
-                return;
+                LockCursor(true);
             }
 
             float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;

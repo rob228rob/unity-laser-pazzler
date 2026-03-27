@@ -8,7 +8,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/_Project/Scenes/MainMenu.unity
+    guid: 73613a4640ccbf34dbf50dfa66181efa
+  - enabled: 1
+    path: Assets/_Project/Scenes/LaserPuzzle_Prototype.unity
+    guid: 48d677d6c8d475f4cb59090a4e404a6b
+  - enabled: 1
+    path: Assets/_Project/Scenes/Room1_Test.unity
+    guid: 6376d16d38f867c4495595443079533b
   m_configObjects:
-    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b,
-      type: 3}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
