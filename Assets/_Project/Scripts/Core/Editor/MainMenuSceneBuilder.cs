@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using Project.Core;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -10,7 +10,7 @@ namespace Project.Core.Editor
     public static class MainMenuSceneBuilder
     {
         private const string MenuScenePath = "Assets/_Project/Scenes/MainMenu.unity";
-        private const string GameplayScenePath = "Assets/_Project/Scenes/LaserPuzzle_Prototype.unity";
+        private const string GameplayScenePath = "Assets/_Project/Scenes/Room1_Test.unity";
 
         [MenuItem("Tools/Laser Puzzle/Create Main Menu Scene")]
         public static void CreateMainMenuScene()
@@ -99,3 +99,4 @@ namespace Project.Core.Editor
         }
     }
 }
+

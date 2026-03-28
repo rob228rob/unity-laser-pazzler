@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &219920187
+--- !u!1 &1167987140
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,8 +127,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 219920189}
-  - component: {fileID: 219920188}
+  - component: {fileID: 1167987142}
+  - component: {fileID: 1167987141}
   m_Layer: 0
   m_Name: MainMenu
   m_TagString: Untagged
@@ -136,26 +136,26 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &219920188
+--- !u!114 &1167987141
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 219920187}
+  m_GameObject: {fileID: 1167987140}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40d49a9e28857854e81aac0824484c95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameplaySceneName: LaserPuzzle_Prototype
---- !u!4 &219920189
+  gameplaySceneName: Room1_Test
+--- !u!4 &1167987142
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 219920187}
+  m_GameObject: {fileID: 1167987140}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -168,4 +168,4 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 219920189}
+  - {fileID: 1167987142}

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -7,7 +7,7 @@ namespace Project.Core
 {
     public class MainMenuController : MonoBehaviour
     {
-        [SerializeField] private string gameplaySceneName = "LaserPuzzle_Prototype";
+        [SerializeField] private string gameplaySceneName = "Room1_Test";
 
         private void Awake()
         {
@@ -159,3 +159,4 @@ namespace Project.Core
         }
     }
 }
+
