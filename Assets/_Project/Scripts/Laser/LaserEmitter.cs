@@ -21,8 +21,10 @@ namespace Project.Laser
         [SerializeField] private float hitOffset = 0.01f;
         [SerializeField] private LayerMask collisionMask = ~0;
         [SerializeField] private bool drawDebugLines = true;
-        [SerializeField] private float beamFlowSpeed = 1.8f;
-        [SerializeField] private float beamTiling = 1.6f;
+        [SerializeField] private float beamFlowSpeed = 3.8f;
+        [SerializeField] private float beamTiling = 3.2f;
+        [SerializeField] private float beamPulseSpeed = 7.5f;
+        [SerializeField] private float beamPulseAmplitude = 0.10f;
         [SerializeField] private bool allowWorldSurfaceBounce = true;
 
         private readonly List<Vector3> points = new List<Vector3>();
@@ -216,6 +218,8 @@ namespace Project.Laser
 
             Vector2 scale = new Vector2(Mathf.Max(1f, totalLength * beamTiling), 1f);
             Vector2 offset = new Vector2(-Time.time * beamFlowSpeed, 0f);
+            float widthPulse = 1f + Mathf.Sin(Time.time * beamPulseSpeed) * beamPulseAmplitude;
+            lineRenderer.widthMultiplier = widthPulse;
 
             if (beamMaterial.HasProperty(BaseMapId))
             {
@@ -247,8 +251,8 @@ namespace Project.Laser
             for (int x = 0; x < sharedBeamTexture.width; x++)
             {
                 float t = x / (float)(sharedBeamTexture.width - 1);
-                float stripe = Mathf.PingPong(t * 8f, 1f);
-                float alpha = Mathf.Lerp(0.20f, 1f, Mathf.SmoothStep(0f, 1f, stripe));
+                float stripe = Mathf.PingPong(t * 14f, 1f);
+                float alpha = Mathf.Lerp(0.08f, 1f, Mathf.SmoothStep(0f, 1f, stripe));
                 sharedBeamTexture.SetPixel(x, 0, new Color(1f, 1f, 1f, alpha));
             }
 
@@ -257,4 +261,3 @@ namespace Project.Laser
         }
     }
 }
-

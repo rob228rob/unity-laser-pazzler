@@ -102,9 +102,11 @@ namespace Project.Core.Editor
                 GlowCyan = CreateOrUpdateUnlitMaterial($"{MaterialsFolder}/M_Room1_GlowCyan.mat", new Color(0.35f, 0.90f, 0.97f)),
                 GlowAmber = CreateOrUpdateUnlitMaterial($"{MaterialsFolder}/M_Room1_GlowAmber.mat", new Color(1.0f, 0.73f, 0.40f)),
                 GlowGreen = CreateOrUpdateUnlitMaterial($"{MaterialsFolder}/M_Room1_GlowGreen.mat", new Color(0.54f, 0.93f, 0.74f)),
+                GlowHazard = CreateOrUpdateUnlitMaterial($"{MaterialsFolder}/M_Room1_GlowHazard.mat", new Color(0.92f, 0.28f, 0.95f)),
                 Laser = CreateOrUpdateUnlitMaterial($"{MaterialsFolder}/M_Room1_Laser.mat", new Color(1.0f, 0.18f, 0.14f)),
                 LaserCyan = CreateOrUpdateUnlitMaterial($"{MaterialsFolder}/M_Room1_LaserCyan.mat", new Color(0.35f, 0.90f, 0.97f)),
-                LaserGreen = CreateOrUpdateUnlitMaterial($"{MaterialsFolder}/M_Room1_LaserGreen.mat", new Color(0.54f, 0.93f, 0.74f))
+                LaserGreen = CreateOrUpdateUnlitMaterial($"{MaterialsFolder}/M_Room1_LaserGreen.mat", new Color(0.54f, 0.93f, 0.74f)),
+                LaserHazard = CreateOrUpdateUnlitMaterial($"{MaterialsFolder}/M_Room1_LaserHazard.mat", new Color(0.92f, 0.28f, 0.95f))
             };
         }
 
@@ -161,9 +163,12 @@ namespace Project.Core.Editor
             CreateRoomPanels(parent, palette, 56f, palette.GlowGreen);
             CreateRoomPanels(parent, palette, 84f, palette.GlowAmber);
 
+            CreateBounceSurface(parent, palette, "Room01_ReflectivePanel", new Vector3(-10.45f, 2.8f, 2f), new Vector3(0.12f, 2.8f, 4.0f), Quaternion.Euler(0f, 90f, 0f));
             CreateBounceSurface(parent, palette, "BouncePanel_02_Ceiling", new Vector3(-1.8f, 4.15f, 24f), new Vector3(3.4f, 0.12f, 1.4f), Quaternion.Euler(34f, 0f, 0f));
+            CreateBounceSurface(parent, palette, "BouncePanel_02_Trap", new Vector3(6.4f, 4.0f, 34f), new Vector3(3.2f, 0.12f, 1.2f), Quaternion.Euler(28f, 0f, 0f));
             CreateBounceSurface(parent, palette, "BouncePanel_03_Wall", new Vector3(10.45f, 2.8f, 58f), new Vector3(0.12f, 2.6f, 3.4f), Quaternion.Euler(0f, -36f, 0f));
             CreateBounceSurface(parent, palette, "BouncePanel_04_Ceiling", new Vector3(3.0f, 4.10f, 90f), new Vector3(3.8f, 0.12f, 1.6f), Quaternion.Euler(30f, 0f, 0f));
+            CreateBounceSurface(parent, palette, "BouncePanel_04_Trap", new Vector3(-3.8f, 4.0f, 86f), new Vector3(3.0f, 0.12f, 1.4f), Quaternion.Euler(32f, 0f, 0f));
 
             CreateCeilingLamp(parent, palette, new Vector3(0f, 4.8f, -8f), new Color(1f, 0.74f, 0.42f), 10f, 2.2f, palette.GlowAmber);
             CreateCeilingLamp(parent, palette, new Vector3(0f, 4.8f, 8f), new Color(1f, 0.74f, 0.42f), 10f, 2.2f, palette.GlowAmber);
@@ -199,8 +204,14 @@ namespace Project.Core.Editor
             LaserEmitter emitter = CreateEmitter(parent, palette, "Emitter_01", new Vector3(-8.5f, 1.1f, -6f), Quaternion.Euler(0f, 90f, 0f));
             CreateReflector(parent, palette, "Reflector_01", new Vector3(0f, 1.1f, -6f), Quaternion.Euler(0f, 90f, 0f));
             LaserReceiver receiver = CreateReceiver(parent, palette, "Receiver_01", new Vector3(0f, 1.05f, 8f));
+            LaserEmitter hazardEmitterA = CreateEmitter(parent, palette, "Emitter_01_Hazard_A", new Vector3(-6f, 1.1f, -10f), Quaternion.identity, palette.LaserHazard, palette.GlowHazard);
+            CreateReflector(parent, palette, "Reflector_01_Hazard_A", new Vector3(-6f, 1.1f, -2f), GetReflectorRotationForDirections(Vector3.forward, Vector3.right));
+            LaserEmitter hazardEmitterB = CreateEmitter(parent, palette, "Emitter_01_Hazard_B", new Vector3(9.5f, 1.1f, 6f), Quaternion.Euler(0f, -90f, 0f), palette.LaserHazard, palette.GlowHazard);
+            CreateReflector(parent, palette, "Reflector_01_Hazard_B", new Vector3(3.5f, 1.1f, 6f), GetReflectorRotationForDirections(Vector3.left, Vector3.back));
             CreateAccentBeacon(parent, palette.GlowAmber, emitter.transform.position + Vector3.up * 1.2f);
             CreateAccentBeacon(parent, palette.GlowAmber, receiver.transform.position + Vector3.up * 1.1f);
+            CreateAccentBeacon(parent, palette.GlowHazard, hazardEmitterA.transform.position + Vector3.up * 1.2f);
+            CreateAccentBeacon(parent, palette.GlowHazard, hazardEmitterB.transform.position + Vector3.up * 1.2f);
             AssignObjectArray(door, "requiredReceivers", new Object[] { receiver });
         }
 
@@ -210,7 +221,7 @@ namespace Project.Core.Editor
             CreateReflector(parent, palette, "Reflector_02A", new Vector3(-2.5f, 1.1f, 20f), Quaternion.Euler(0f, 90f, 0f));
             LaserRelayEmitter cyanRelay = CreateRelayEmitter(parent, palette, "Relay_02_Filtered", new Vector3(-2.5f, 1.1f, 28f), Quaternion.Euler(0f, 90f, 0f), palette.LaserCyan);
             CreateColorFilter(parent, palette, "ColorFilter_02", new Vector3(-2.5f, 1.1f, 28f), cyanRelay, palette.GlowCyan);
-            CreateReflector(parent, palette, "Reflector_02B", new Vector3(5.5f, 1.1f, 28f), Quaternion.Euler(0f, 90f, 0f));
+            LaserReflector room02ExitReflector = CreateReflector(parent, palette, "Reflector_02B", new Vector3(5.5f, 1.1f, 28f), Quaternion.Euler(0f, 90f, 0f));
             LaserReceiver receiver = CreateReceiver(parent, palette, "Receiver_02", new Vector3(5.5f, 1.05f, 36f));
             CreateEmitter(parent, palette, "Emitter_02_Side", new Vector3(9.5f, 0.45f, 18f), Quaternion.Euler(0f, -90f, 0f));
             CreateReflector(parent, palette, "Reflector_02_Side", new Vector3(3f, 0.45f, 18f), Quaternion.Euler(0f, 135f, 0f));
@@ -221,8 +232,19 @@ namespace Project.Core.Editor
             CreateReflector(parent, palette, "Reflector_02_Decoy_C", new Vector3(-1.5f, 0.45f, 34f), Quaternion.Euler(0f, 45f, 0f));
             CreateEmitter(parent, palette, "Emitter_02_CrossHazard", new Vector3(9.5f, 1.1f, 30f), Quaternion.Euler(0f, -90f, 0f));
             CreateEmitter(parent, palette, "Emitter_02_CeilingHazard", new Vector3(-10.0f, 1.1f, 24f), Quaternion.Euler(-18f, 90f, 0f));
+            LaserRelayEmitter room02TrapRelay = CreateRelayEmitter(parent, palette, "Relay_02_Trap", new Vector3(9.5f, 1.1f, 36f), Quaternion.Euler(0f, -90f, 0f), palette.LaserCyan);
+            LaserEmitter hazardEmitterA = CreateEmitter(parent, palette, "Emitter_02_Hazard_A", new Vector3(-6f, 1.1f, 16f), Quaternion.identity, palette.LaserHazard, palette.GlowHazard);
+            CreateReflector(parent, palette, "Reflector_02_Hazard_A", new Vector3(-6f, 1.1f, 24f), GetReflectorRotationForDirections(Vector3.forward, Vector3.right));
+            LaserEmitter hazardEmitterB = CreateEmitter(parent, palette, "Emitter_02_Hazard_B", new Vector3(9.5f, 1.1f, 36f), Quaternion.Euler(0f, -90f, 0f), palette.LaserHazard, palette.GlowHazard);
+            CreateReflector(parent, palette, "Reflector_02_Hazard_B", new Vector3(3.5f, 1.1f, 36f), GetReflectorRotationForDirections(Vector3.left, Vector3.back));
+            ReflectorAngleHazardTrigger room02HazardTrigger = room02ExitReflector.gameObject.AddComponent<ReflectorAngleHazardTrigger>();
+            AssignObject(room02HazardTrigger, "hazardEmitter", room02TrapRelay);
+            AssignFloat(room02HazardTrigger, "dangerousYaw", 180f);
+            AssignFloat(room02HazardTrigger, "tolerance", 10f);
             CreateAccentBeacon(parent, palette.GlowCyan, emitter.transform.position + Vector3.up * 1.2f);
             CreateAccentBeacon(parent, palette.GlowCyan, receiver.transform.position + Vector3.up * 1.1f);
+            CreateAccentBeacon(parent, palette.GlowHazard, hazardEmitterA.transform.position + Vector3.up * 1.2f);
+            CreateAccentBeacon(parent, palette.GlowHazard, hazardEmitterB.transform.position + Vector3.up * 1.2f);
             AssignObjectArray(door, "requiredReceivers", new Object[] { receiver });
         }
 
@@ -249,6 +271,8 @@ namespace Project.Core.Editor
             CreateEmitter(parent, palette, "Emitter_03_CrossHazard", new Vector3(-10f, 1.1f, 58f), Quaternion.Euler(0f, 90f, 0f));
             CreateEmitter(parent, palette, "Emitter_03_CeilingHazard", new Vector3(10f, 1.1f, 60f), Quaternion.Euler(-20f, -90f, 0f));
             LaserRelayEmitter trapRelay = CreateRelayEmitter(parent, palette, "Relay_03_Trap", new Vector3(10f, 1.1f, 60f), Quaternion.Euler(0f, -90f, 0f), palette.LaserCyan);
+            LaserEmitter hazardEmitterB = CreateEmitter(parent, palette, "Emitter_03_Hazard_B", new Vector3(8f, 1.1f, 46f), Quaternion.identity, palette.LaserHazard, palette.GlowHazard);
+            CreateReflector(parent, palette, "Reflector_03_Hazard_B", new Vector3(8f, 1.1f, 54f), GetReflectorRotationForDirections(Vector3.forward, Vector3.left));
             ReflectorAngleHazardTrigger hazardTrigger = rightReflectorA.gameObject.AddComponent<ReflectorAngleHazardTrigger>();
             AssignObject(hazardTrigger, "hazardEmitter", trapRelay);
             AssignFloat(hazardTrigger, "dangerousYaw", 180f);
@@ -256,6 +280,7 @@ namespace Project.Core.Editor
 
             AssignObjectArray(splitter, "outputEmitters", new Object[] { leftRelay, rightRelay });
             CreateAccentBeacon(parent, palette.GlowGreen, sourceEmitter.transform.position + Vector3.up * 1.2f);
+            CreateAccentBeacon(parent, palette.GlowHazard, hazardEmitterB.transform.position + Vector3.up * 1.2f);
             AssignObjectArray(door, "requiredReceivers", new Object[] { leftReceiver, rightReceiver });
         }
 
@@ -274,12 +299,17 @@ namespace Project.Core.Editor
             LaserReceiver leftExitReceiver = CreateReceiver(parent, palette, "Receiver_04B_L", new Vector3(-9f, 1.05f, 92f));
             LaserReceiver rightExitReceiver = CreateReceiver(parent, palette, "Receiver_04B_R", new Vector3(9f, 1.05f, 92f));
             CreateEmitter(parent, palette, "Emitter_04_Decoy", new Vector3(-10f, 0.45f, 90f), Quaternion.Euler(0f, 90f, 0f));
-            CreateReflector(parent, palette, "Reflector_04_Decoy_A", new Vector3(-2f, 0.45f, 90f), Quaternion.Euler(0f, 45f, 0f));
+            LaserReflector room04TrapReflector = CreateReflector(parent, palette, "Reflector_04_Decoy_A", new Vector3(-2f, 0.45f, 90f), Quaternion.Euler(0f, 45f, 0f));
             CreateReflector(parent, palette, "Reflector_04_Decoy_B", new Vector3(8f, 1.1f, 96f), Quaternion.Euler(0f, -45f, 0f));
             CreateReflector(parent, palette, "Reflector_04_Decoy_C", new Vector3(-8f, 1.1f, 98f), Quaternion.Euler(0f, 135f, 0f));
             CreateReflector(parent, palette, "Reflector_04_CeilingDecoy", new Vector3(4f, 4f, 94f), Quaternion.Euler(40f, 0f, 0f));
             CreateEmitter(parent, palette, "Emitter_04_BridgeHazard", new Vector3(9.5f, 1.1f, 84f), Quaternion.Euler(0f, -90f, 0f));
             CreateEmitter(parent, palette, "Emitter_04_CeilingHazard", new Vector3(-10f, 1.1f, 90f), Quaternion.Euler(-18f, 90f, 0f));
+            LaserRelayEmitter room04TrapRelay = CreateRelayEmitter(parent, palette, "Relay_04_Trap", new Vector3(9.5f, 1.1f, 82f), Quaternion.Euler(0f, -90f, 0f), palette.LaserCyan);
+            ReflectorAngleHazardTrigger room04HazardTrigger = room04TrapReflector.gameObject.AddComponent<ReflectorAngleHazardTrigger>();
+            AssignObject(room04HazardTrigger, "hazardEmitter", room04TrapRelay);
+            AssignFloat(room04HazardTrigger, "dangerousYaw", 135f);
+            AssignFloat(room04HazardTrigger, "tolerance", 12f);
 
             AssignObjectArray(exitSplitter, "outputEmitters", new Object[] { leftRelay, rightRelay });
             AssignObjectArray(door, "requiredReceivers", new Object[] { bridgeReceiver, leftExitReceiver, rightExitReceiver });
@@ -298,8 +328,8 @@ namespace Project.Core.Editor
 
             LaserEmitter finishEmitter = CreateEmitter(parent, palette, "Emitter_05_CeilingPath", new Vector3(-8.5f, 1.1f, 100f), Quaternion.Euler(0f, 90f, 0f));
             CreateReflector(parent, palette, "Reflector_05_Floor", primaryReflectorPosition, GetReflectorRotationForDirections(Vector3.right, Vector3.up));
-            CreateReflector(parent, palette, "Reflector_05_Ceiling_A", ceilingReflectorA, GetReflectorRotationForDirections(Vector3.up, Vector3.forward));
-            CreateReflector(parent, palette, "Reflector_05_Ceiling_B", ceilingReflectorB, GetReflectorRotationForDirections(Vector3.forward, Vector3.down));
+            CreateReflector(parent, palette, "Reflector_05_Ceiling_A", ceilingReflectorA, GetReflectorRotationForDirections(Vector3.up, Vector3.forward) * Quaternion.Euler(0f, 45f, 0f));
+            CreateReflector(parent, palette, "Reflector_05_Ceiling_B", ceilingReflectorB, GetReflectorRotationForDirections(Vector3.forward, Vector3.down) * Quaternion.Euler(0f, -45f, 0f));
             LaserReceiver finishReceiver = CreateReceiver(parent, palette, "Receiver_05_CeilingPath", finalReceiverPosition);
 
             CreateDecorativeBox("FinishPad", parent, new Vector3(0f, -0.42f, 110f), new Vector3(8f, 0.08f, 6f), palette.GlowGreen);
@@ -386,13 +416,18 @@ namespace Project.Core.Editor
 
         private static LaserEmitter CreateEmitter(Transform parent, MaterialPalette palette, string name, Vector3 position, Quaternion rotation)
         {
+            return CreateEmitter(parent, palette, name, position, rotation, palette.Laser, palette.GlowAmber);
+        }
+
+        private static LaserEmitter CreateEmitter(Transform parent, MaterialPalette palette, string name, Vector3 position, Quaternion rotation, Material laserMaterial, Material coreGlowMaterial)
+        {
             GameObject emitterObject = new GameObject(name);
             emitterObject.transform.SetParent(parent, false);
             emitterObject.transform.localPosition = position;
             emitterObject.transform.localRotation = rotation;
 
             LineRenderer lineRenderer = emitterObject.AddComponent<LineRenderer>();
-            lineRenderer.material = palette.Laser;
+            lineRenderer.material = laserMaterial;
             lineRenderer.useWorldSpace = true;
             lineRenderer.startWidth = 0.08f;
             lineRenderer.endWidth = 0.08f;
@@ -401,6 +436,9 @@ namespace Project.Core.Editor
             lineRenderer.receiveShadows = false;
             lineRenderer.alignment = LineAlignment.View;
             lineRenderer.textureMode = LineTextureMode.Stretch;
+            Color emitterColor = GetMaterialColor(laserMaterial);
+            lineRenderer.startColor = emitterColor;
+            lineRenderer.endColor = emitterColor;
 
             LaserEmitter emitter = emitterObject.AddComponent<LaserEmitter>();
 
@@ -411,7 +449,7 @@ namespace Project.Core.Editor
             GameObject body = CreateCylinder("EmitterBody", emitterObject.transform, Vector3.zero, new Vector3(0.55f, 0.32f, 0.55f), palette.Emitter);
             body.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
             CreateCylinder("EmitterBase", emitterObject.transform, new Vector3(0f, -0.40f, 0f), new Vector3(0.75f, 0.12f, 0.75f), palette.Trim);
-            CreateDecorativeBox("EmitterCore", emitterObject.transform, new Vector3(0f, 0f, 0.62f), new Vector3(0.22f, 0.22f, 0.06f), palette.GlowAmber);
+            CreateDecorativeBox("EmitterCore", emitterObject.transform, new Vector3(0f, 0f, 0.62f), new Vector3(0.22f, 0.22f, 0.06f), coreGlowMaterial);
 
             AssignObject(emitter, "originPoint", origin.transform);
             AssignObject(emitter, "lineRenderer", lineRenderer);
@@ -460,6 +498,9 @@ namespace Project.Core.Editor
             lineRenderer.receiveShadows = false;
             lineRenderer.alignment = LineAlignment.View;
             lineRenderer.textureMode = LineTextureMode.Stretch;
+            Color relayColor = GetMaterialColor(laserMaterial);
+            lineRenderer.startColor = relayColor;
+            lineRenderer.endColor = relayColor;
 
             LaserRelayEmitter relayEmitter = relayObject.AddComponent<LaserRelayEmitter>();
 
@@ -659,10 +700,23 @@ namespace Project.Core.Editor
             }
 
             material.shader = shader;
+            color.a = 1f;
             SetMaterialColor(material, color);
+            if (material.HasProperty("_Surface"))
+            {
+                material.SetFloat("_Surface", 0f);
+            }
+
+            if (material.HasProperty("_AlphaClip"))
+            {
+                material.SetFloat("_AlphaClip", 0f);
+            }
+
+            material.renderQueue = (int)RenderQueue.Geometry;
             EditorUtility.SetDirty(material);
             return material;
         }
+
 
         private static void SetMaterialColor(Material material, Color color)
         {
@@ -674,6 +728,26 @@ namespace Project.Core.Editor
             {
                 material.SetColor("_Color", color);
             }
+        }
+
+        private static Color GetMaterialColor(Material material)
+        {
+            if (material == null)
+            {
+                return Color.white;
+            }
+
+            if (material.HasProperty("_BaseColor"))
+            {
+                return material.GetColor("_BaseColor");
+            }
+
+            if (material.HasProperty("_Color"))
+            {
+                return material.GetColor("_Color");
+            }
+
+            return Color.white;
         }
 
         private static void SetMaterialFloat(Material material, string propertyName, float value)
@@ -807,6 +881,7 @@ namespace Project.Core.Editor
             serializedObject.ApplyModifiedPropertiesWithoutUndo();
         }
 
+
         private sealed class MaterialPalette
         {
             public Material Floor;
@@ -823,9 +898,11 @@ namespace Project.Core.Editor
             public Material GlowCyan;
             public Material GlowAmber;
             public Material GlowGreen;
+            public Material GlowHazard;
             public Material Laser;
             public Material LaserCyan;
             public Material LaserGreen;
+            public Material LaserHazard;
         }
     }
 }
