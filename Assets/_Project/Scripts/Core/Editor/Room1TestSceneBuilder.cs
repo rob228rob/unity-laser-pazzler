@@ -218,10 +218,10 @@ namespace Project.Core.Editor
         private static void CreateRoom02(Transform parent, MaterialPalette palette, DoorController door)
         {
             LaserEmitter emitter = CreateEmitter(parent, palette, "Emitter_02", new Vector3(-8.5f, 1.1f, 20f), Quaternion.Euler(0f, 90f, 0f));
-            CreateReflector(parent, palette, "Reflector_02A", new Vector3(-2.5f, 1.1f, 20f), Quaternion.Euler(0f, 90f, 0f));
+            CreateReflector(parent, palette, "Reflector_02A", new Vector3(-2.5f, 1.1f, 20f), GetReflectorRotationForDirections(Vector3.right, Vector3.forward) * Quaternion.Euler(0f, 45f, 0f));
             LaserRelayEmitter cyanRelay = CreateRelayEmitter(parent, palette, "Relay_02_Filtered", new Vector3(-2.5f, 1.1f, 28f), Quaternion.Euler(0f, 90f, 0f), palette.LaserCyan);
             CreateColorFilter(parent, palette, "ColorFilter_02", new Vector3(-2.5f, 1.1f, 28f), cyanRelay, palette.GlowCyan);
-            LaserReflector room02ExitReflector = CreateReflector(parent, palette, "Reflector_02B", new Vector3(5.5f, 1.1f, 28f), Quaternion.Euler(0f, 90f, 0f));
+            LaserReflector room02ExitReflector = CreateReflector(parent, palette, "Reflector_02B", new Vector3(5.5f, 1.1f, 28f), GetReflectorRotationForDirections(Vector3.right, Vector3.forward) * Quaternion.Euler(0f, -45f, 0f));
             LaserReceiver receiver = CreateReceiver(parent, palette, "Receiver_02", new Vector3(5.5f, 1.05f, 36f));
             CreateEmitter(parent, palette, "Emitter_02_Side", new Vector3(9.5f, 0.45f, 18f), Quaternion.Euler(0f, -90f, 0f));
             CreateReflector(parent, palette, "Reflector_02_Side", new Vector3(3f, 0.45f, 18f), Quaternion.Euler(0f, 135f, 0f));
@@ -287,7 +287,9 @@ namespace Project.Core.Editor
         private static void CreateRoom04(Transform parent, MaterialPalette palette, DoorController door)
         {
             LaserEmitter bridgeEmitter = CreateEmitter(parent, palette, "Emitter_04A", new Vector3(-8.5f, 1.1f, 76f), Quaternion.Euler(0f, 90f, 0f));
-            LaserReceiver bridgeReceiver = CreateTimedReceiver(parent, palette, "Receiver_04A_Timed", new Vector3(-2.5f, 1.05f, 76f), 3.5f, palette.GlowAmber);
+            CreateReflector(parent, palette, "Reflector_04A_Bridge_01", new Vector3(-2.5f, 1.1f, 76f), GetReflectorRotationForDirections(Vector3.right, Vector3.forward) * Quaternion.Euler(0f, 45f, 0f));
+            CreateReflector(parent, palette, "Reflector_04A_Bridge_02", new Vector3(-2.5f, 1.1f, 82f), GetReflectorRotationForDirections(Vector3.forward, Vector3.right) * Quaternion.Euler(0f, -45f, 0f));
+            LaserReceiver bridgeReceiver = CreateTimedReceiver(parent, palette, "Receiver_04A_Timed", new Vector3(3.5f, 1.05f, 82f), 3.5f, palette.GlowAmber);
 
             LaserBridgeController bridge = CreateBridge(parent, palette, new Vector3(0f, 0.2f, 84f), new Vector3(4f, 0.4f, 12f));
             AssignObjectArray(bridge, "requiredReceivers", new Object[] { bridgeReceiver });
@@ -296,8 +298,10 @@ namespace Project.Core.Editor
             LaserBeamSplitter exitSplitter = CreateBeamSplitter(parent, palette, "Splitter_04", new Vector3(0f, 1.1f, 92f));
             LaserRelayEmitter leftRelay = CreateRelayEmitter(parent, palette, "Relay_04L", new Vector3(-4f, 1.1f, 92f), Quaternion.Euler(0f, -90f, 0f), palette.LaserCyan);
             LaserRelayEmitter rightRelay = CreateRelayEmitter(parent, palette, "Relay_04R", new Vector3(4f, 1.1f, 92f), Quaternion.Euler(0f, 90f, 0f), palette.LaserGreen);
-            LaserReceiver leftExitReceiver = CreateReceiver(parent, palette, "Receiver_04B_L", new Vector3(-9f, 1.05f, 92f));
-            LaserReceiver rightExitReceiver = CreateReceiver(parent, palette, "Receiver_04B_R", new Vector3(9f, 1.05f, 92f));
+            CreateReflector(parent, palette, "Reflector_04B_L", new Vector3(-9f, 1.1f, 92f), GetReflectorRotationForDirections(Vector3.left, Vector3.forward) * Quaternion.Euler(0f, 45f, 0f));
+            CreateReflector(parent, palette, "Reflector_04B_R", new Vector3(9f, 1.1f, 92f), GetReflectorRotationForDirections(Vector3.right, Vector3.forward) * Quaternion.Euler(0f, -45f, 0f));
+            LaserReceiver leftExitReceiver = CreateReceiver(parent, palette, "Receiver_04B_L", new Vector3(-9f, 1.05f, 96f));
+            LaserReceiver rightExitReceiver = CreateReceiver(parent, palette, "Receiver_04B_R", new Vector3(9f, 1.05f, 96f));
             CreateEmitter(parent, palette, "Emitter_04_Decoy", new Vector3(-10f, 0.45f, 90f), Quaternion.Euler(0f, 90f, 0f));
             LaserReflector room04TrapReflector = CreateReflector(parent, palette, "Reflector_04_Decoy_A", new Vector3(-2f, 0.45f, 90f), Quaternion.Euler(0f, 45f, 0f));
             CreateReflector(parent, palette, "Reflector_04_Decoy_B", new Vector3(8f, 1.1f, 96f), Quaternion.Euler(0f, -45f, 0f));
